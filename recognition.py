@@ -22,7 +22,7 @@ def load_dataset():
         if not os.path.exists(filename):
             download(filename)
         with gzip.open(filename, 'rb') as f:
-            data = numpy.frombuffer(f.read(), numpy.unit8, offset=16)
+            data = numpy.frombuffer(f.read(), numpy.uint8, offset=16)
             data = data.reshape(-1, 1, 28, 28)
             return data/numpy.float32(256)
 
@@ -30,7 +30,7 @@ def load_dataset():
         if not os.path.exists(filename):
             download(filename)
         with gzip.open(filename, 'rb') as f:
-            data = numpy.frombuffer(f.read(), numpy.unit8, offset=8)
+            data = numpy.frombuffer(f.read(), numpy.uint8, offset=8)
         return data
 
     x_train = load_mnist_images('train-images-idx3-ubyte.gz')
@@ -43,7 +43,9 @@ def load_dataset():
 x_train, y_train, x_test, y_test = load_dataset()
 
 matplotlib.use('TkAgg')
-pt.show(pt.imshow(x_train[3][0]))
+pt.imshow(x_train[3][0])
+pt.show()
+
 
 def buildNN(input_var=None):
     l_in = lasagne.layers.InputLayer(shape=(None, 1, 28, 28), input_var=input_var)
@@ -62,6 +64,7 @@ target_var = tens.ivector('targets')
 network = buildNN(input_var)
 
 prediction = lasagne.layers.get_output(network)
+print(prediction)
 loss = lasagne.objectives.categorical_crossentropy(prediction, target_var)
 loss = loss.mean()
 
